@@ -11,6 +11,10 @@ export function openAnimationPropertiesDialog(animation: _Animation) {
 	const loopMode = new Valuable(animation.loop as string)
 	const loopDelay = new Valuable(Number(animation.loop_delay) || 0)
 	const excludedNodes = new Valuable(animation.excluded_nodes)
+	const keepModelOrigin = new Valuable(
+		animation.model_origin_node && Object.keys(animation.model_origin_node).length > 0
+	)
+	const modelOriginNode = new Valuable(animation.model_origin_node)
 
 	new SvelteDialog({
 		id: DIALOG_ID,
@@ -22,6 +26,8 @@ export function openAnimationPropertiesDialog(animation: _Animation) {
 			loopMode,
 			loopDelay,
 			excludedNodes,
+			keepModelOrigin,
+			modelOriginNode,
 		},
 		preventKeybinds: true,
 		onConfirm() {
@@ -30,6 +36,11 @@ export function openAnimationPropertiesDialog(animation: _Animation) {
 			animation.loop = loopMode.get() as any
 			animation.loop_delay = loopDelay.get().toString()
 			animation.excluded_nodes = excludedNodes.get()
+			if (keepModelOrigin.get()) {
+				animation.model_origin_node = modelOriginNode.get() ?? {}
+			} else {
+				animation.model_origin_node = {}
+			}
 		},
 	}).show()
 }

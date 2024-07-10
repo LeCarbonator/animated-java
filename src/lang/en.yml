@@ -365,6 +365,11 @@ animated_java.dialog.animation_properties.animation_name.error.invalid_character
 animated_java.dialog.animation_properties.loop_delay.title: Loop Delay
 animated_java.dialog.animation_properties.loop_delay.description: The delay between loops. This is the time the animation will pause before starting again. This is only used when the Loop Mode is set to Loop.
 
+animated_java.dialog.animation_properties.keep_model_origin.title: Keep Model At Origin
+animated_java.dialog.animation_properties.keep_model_origin.description: Whether or not the model is kept at its origin point. Any movement away from the origin will be transformed into teleport commands instead.
+animated_java.dialog.animation_properties.model_origin_node.title: Model Origin Node
+animated_java.dialog.animation_properties.model_origin_node.description: Determines which node will be treated as the center of the model. This node will always be at the origin during this animation.
+
 animated_java.dialog.animation_properties.bone_lists.description: A list of nodes to include or exclude from the animation. Only nodes in the included list will be modified by the animation, and nodes in the excluded list will be ignored.
 animated_java.dialog.animation_properties.excluded_nodes.title: Excluded Nodes
 animated_java.dialog.animation_properties.excluded_nodes.description: A list of nodes to exclude from the animation. These nodes will not be modified by the animation.
@@ -400,6 +405,7 @@ animated_java.action.variants.delete: Delete Variant
 ## Properties
 animated_java.animation.excluded_nodes: Excluded Nodes
 animated_java.animation.invert_excluded_nodes: Invert Excluded Nodes
+animated_java.animation.model_origin_node: Model Origin Node
 
 ## Timeline
 animated_java.effect_animator.timeline.variant: Variant

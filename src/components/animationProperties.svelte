@@ -10,13 +10,31 @@
 	import Collection from './dialogItems/collection.svelte'
 	import Select from './dialogItems/select.svelte'
 	import { getAvailableNodes } from '../util/excludedNodes'
+	import { getTopLevelNodes } from "../util/getTopLevelNodes"
+	import Checkbox from './dialogItems/checkbox.svelte'
+	import SelectCollection from './dialogItems/selectCollection.svelte'
+	import { derived } from 'svelte/store'
 
 	export let animationName: Valuable<string>
 	export let loopMode: Valuable<string>
 	export let loopDelay: Valuable<number>
+	export let keepModelOrigin: Valuable<boolean>
+	export let modelOriginNode: Valuable<{ name: string; value: string} | undefined>
 	export let excludedNodes: Valuable<Array<{ name: string; value: string }>>
 
 	const availableBones = getAvailableNodes(excludedNodes.get())
+	const topLevelBones = getTopLevelNodes()
+
+	// automatically select the top level node if there's only one
+	keepModelOrigin.subscribe((selected) => {
+		if (selected) {
+			if (!modelOriginNode.get() || topLevelBones.length === 1) {
+				modelOriginNode.set(topLevelBones.at(0))
+			}
+		} else {
+			modelOriginNode.set(undefined);
+		}
+	})
 
 	function animationNameValueChecker(value: string): { type: string; message: string } {
 		if (value.trim().length === 0) {
@@ -62,6 +80,21 @@
 		min={0}
 		bind:value={loopDelay}
 	/>
+
+	<Checkbox
+		label={translate('dialog.animation_properties.keep_model_origin.title')}
+		tooltip={translate('dialog.animation_properties.keep_model_origin.description')}
+		bind:checked={keepModelOrigin}
+	/>
+
+	{#if $keepModelOrigin}
+		<SelectCollection
+			label={translate('animated_java.dialog.animation_properties.model_origin_node.title')}
+			tooltip={translate('animated_java.dialog.animation_properties.model_origin_node.description')}
+			items={topLevelBones}
+			bind:selectedItem={modelOriginNode}
+		/>
+	{/if}
 
 	<Collection
 		label={translate('dialog.animation_properties.excluded_nodes.title')}

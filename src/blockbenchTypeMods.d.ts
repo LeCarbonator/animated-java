@@ -46,6 +46,7 @@ declare global {
 	// eslint-disable-next-line @typescript-eslint/naming-convention
 	interface _Animation {
 		excluded_nodes: CollectionItem[]
+		model_origin_node: CollectionItem | {}
 	}
 
 	interface AnimationUndoCopy {

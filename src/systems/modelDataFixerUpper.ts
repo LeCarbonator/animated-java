@@ -43,6 +43,9 @@ export function process(model: any): any {
 		if (compareVersions('0.5.6', model.meta.format_version)) model = updateModelTo1_0pre7(model)
 		// v1.0.0-pre8
 		if (compareVersions('0.5.7', model.meta.format_version)) model = updateModelTo1_0pre8(model)
+		// v1.1.0-lecarbonator
+		if (compareVersions('1.1.0-lecarbonator', model.meta.format_version))
+			model = updateModelTo1_1_carboFork(model)
 
 		console.groupEnd()
 
@@ -505,6 +508,22 @@ function updateModelTo1_0pre8(model: any): IBlueprintFormatJSON {
 	if (model.project_settings) {
 		model.blueprint_settings = model.project_settings
 		delete model.project_settings
+	}
+
+	return model as IBlueprintFormatJSON
+}
+
+// region v1.1.0-lecarbonator
+// eslint-disable-next-line @typescript-eslint/naming-convention
+function updateModelTo1_1_carboFork(model: any): IBlueprintFormatJSON {
+	console.log('Processing model format 1.1.0', JSON.parse(JSON.stringify(model)))
+
+	for (const animation of model?.animations || []) {
+		if (animation.model_origin_node && Object.keys(animation.model_origin_node).length === 0)
+			continue
+		if (typeof animation.model_origin_node?.value === 'string') continue
+
+		animation.model_origin_node = {}
 	}
 
 	return model as IBlueprintFormatJSON

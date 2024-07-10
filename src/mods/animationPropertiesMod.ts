@@ -55,6 +55,7 @@ createBlockbenchMod(
 createBlockbenchMod(
 	`${PACKAGE.name}:animationPropertiesMod`,
 	{
+		modelOriginNodeProperty: undefined as ContextProperty<'object'>,
 		excludedNodesProperty: undefined as ContextProperty<'array'>,
 	},
 	context => {
@@ -66,6 +67,16 @@ createBlockbenchMod(
 				condition: () => isCurrentFormat(),
 				label: translate('animation.excluded_nodes'),
 				default: [],
+			}
+		)
+		context.modelOriginNodeProperty = new Property(
+			Blockbench.Animation,
+			'object',
+			'model_origin_node',
+			{
+				condition: () => isCurrentFormat(),
+				label: translate('animation.'),
+				default: {},
 			}
 		)
 		return context
