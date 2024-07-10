@@ -1,2 +1,2 @@
 //// <reference types="blockbench-types"/>
-/// <reference path="D:/github-repos/snavesutit/blockbench-types/types/index.d.ts"/>
+/// <reference path="C:/Users/Luca/Documents/Programming/JS - TS/types/blockbench-types/types/index.d.ts"/>
