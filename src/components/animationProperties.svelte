@@ -13,12 +13,14 @@
 	import { getTopLevelNodes } from "../util/getTopLevelNodes"
 	import Checkbox from './dialogItems/checkbox.svelte'
 	import SelectCollection from './dialogItems/selectCollection.svelte'
+	import MultiSelect from './dialogItems/multiSelect.svelte'
 
 	export let animationName: Valuable<string>
 	export let loopMode: Valuable<string>
 	export let loopDelay: Valuable<number>
 	export let keepModelOrigin: Valuable<boolean>
 	export let modelOriginNode: Valuable<{ name: string; value: string} | undefined>
+	export let modelOriginNodeAxes: Valuable<Array<{ name: string; selected: boolean; tooltip?: string;}>>
 	export let excludedNodes: Valuable<Array<{ name: string; value: string }>>
 
 	const availableBones = getAvailableNodes(excludedNodes.get())
@@ -92,6 +94,11 @@
 			tooltip={translate('animated_java.dialog.animation_properties.model_origin_node.description')}
 			items={topLevelBones}
 			bind:selectedItem={modelOriginNode}
+		/>
+		<MultiSelect 
+		label={"Enabled Axes"} 
+		tooltip={"Enabled Axes"} 
+		selection={modelOriginNodeAxes}
 		/>
 	{/if}
 

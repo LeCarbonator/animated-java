@@ -519,11 +519,24 @@ function updateModelTo1_1_carboFork(model: any): IBlueprintFormatJSON {
 	console.log('Processing model format 1.1.0', JSON.parse(JSON.stringify(model)))
 
 	for (const animation of model?.animations || []) {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		if (animation.model_origin_node && Object.keys(animation.model_origin_node).length === 0)
 			continue
-		if (typeof animation.model_origin_node?.value === 'string') continue
 
-		animation.model_origin_node = {}
+		const {
+			icon = '',
+			name = '',
+			value = '',
+			// eslint-disable-next-line @typescript-eslint/naming-convention
+			enabled_axes = { x: true, y: true, z: true },
+		} = animation.model_origin_node
+
+		animation.model_origin_node = {
+			icon,
+			name,
+			value,
+			enabled_axes,
+		}
 	}
 
 	return model as IBlueprintFormatJSON

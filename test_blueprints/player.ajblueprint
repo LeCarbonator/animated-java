@@ -1103,7 +1103,7 @@
 			"override": false,
 			"length": 10,
 			"snapping": 20,
-			"selected": true,
+			"selected": false,
 			"saved": false,
 			"path": "",
 			"anim_time_update": "",

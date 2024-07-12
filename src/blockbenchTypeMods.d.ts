@@ -27,6 +27,14 @@ declare module 'three' {
 	}
 }
 
+type ModelOriginNode = CollectionItem & {
+	enabled_axes: {
+		x: boolean
+		y: boolean
+		z: boolean
+	}
+}
+
 declare global {
 	interface ModelProject {
 		animated_java: { [T in keyof typeof defaultValues]: (typeof defaultValues)[T] }
@@ -46,17 +54,17 @@ declare global {
 	// eslint-disable-next-line @typescript-eslint/naming-convention
 	interface _Animation {
 		excluded_nodes: CollectionItem[]
-		model_origin_node: CollectionItem | Record<string, never>
+		model_origin_node: ModelOriginNode | Record<string, never>
 	}
 
 	interface AnimationUndoCopy {
 		excluded_nodes: string[]
-		model_origin_node: CollectionItem | Record<string, never>
+		model_origin_node: ModelOriginNode | Record<string, never>
 	}
 
 	interface AnimationOptions {
 		excluded_nodes: string[]
-		model_origin_node: CollectionItem | Record<string, never>
+		model_origin_node: ModelOriginNode | Record<string, never>
 	}
 
 	// eslint-disable-next-line @typescript-eslint/naming-convention

@@ -4,23 +4,25 @@
 
 	export let label: string
 	export let tooltip: string = ''
-	export let options: Record<string, string>
-	export let defaultSelection: string[]
-	export let selection: Valuable<boolean[]>
-
-	function toggleOption(option: number) {
-		selection.get()[option] = !selection.get()[option]
-		selection.set(selection.get())
-	}
+	//export let options: Record<string, string>
+	// export let defaultSelection: string[]
+	export let selection: Valuable<Array<{ name: string; selected: boolean; tooltip?: string; }>>
 </script>
 
 <BaseDialogItem {label} {tooltip}>
 	<div class="dialog_bar form_bar checkbox_bar">
-		<label class="name_space_left" for="export">{label}</label>
+		<label id="multi_select_label" class="name_space_left" for="export">{label}</label>
 		<div class="spacer" />
-		<div>
-			{#each $selection as value, i}
-				<input type="checkbox" class="focusable_input" id="export" bind:checked={value} />
+		<div id="export">
+			{#each $selection as { name, selected, tooltip = "" }, i}
+					<label for={`${label}_${i}`}>{name}</label>
+					<input 
+					type="checkbox"
+					title={tooltip}
+					class="focusable_input" 
+					id={`${label}_${i}`} 
+					bind:checked={selected} 
+					/>
 			{/each}
 		</div>
 	</div>
@@ -38,7 +40,7 @@
 		margin: 8px;
 		margin-left: 16px;
 	}
-	label {
+	label#multi_select_label {
 		width: auto;
 	}
 </style>

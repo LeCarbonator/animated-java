@@ -16,6 +16,24 @@ export function openAnimationPropertiesDialog(animation: _Animation) {
 	)
 	const modelOriginNode = new Valuable(animation.model_origin_node)
 
+	const modelOriginNodeAxes = new Valuable([
+		{
+			name: 'X',
+			tooltip: 'Enable the X axis',
+			selected: animation.model_origin_node.enabled_axes.x,
+		},
+		{
+			name: 'Y',
+			tooltip: 'Enable the Y axis',
+			selected: animation.model_origin_node.enabled_axes.y,
+		},
+		{
+			name: 'Z',
+			tooltip: 'Enable the Z axis',
+			selected: animation.model_origin_node.enabled_axes.z,
+		},
+	])
+
 	new SvelteDialog({
 		id: DIALOG_ID,
 		title: translate('dialog.animation_properties.title', animation.name),
@@ -28,6 +46,7 @@ export function openAnimationPropertiesDialog(animation: _Animation) {
 			excludedNodes,
 			keepModelOrigin,
 			modelOriginNode,
+			modelOriginNodeAxes,
 		},
 		preventKeybinds: true,
 		onConfirm() {
@@ -38,6 +57,13 @@ export function openAnimationPropertiesDialog(animation: _Animation) {
 			animation.excluded_nodes = excludedNodes.get()
 			if (keepModelOrigin.get()) {
 				animation.model_origin_node = modelOriginNode.get() ?? {}
+				const [axisX, axisY, axisZ] = modelOriginNodeAxes.get()
+
+				animation.model_origin_node.enabled_axes = {
+					x: axisX.selected,
+					y: axisY.selected,
+					z: axisZ.selected,
+				}
 			} else {
 				animation.model_origin_node = {}
 			}

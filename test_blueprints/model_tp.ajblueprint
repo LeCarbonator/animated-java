@@ -269,7 +269,7 @@
 			"override": false,
 			"length": 4.7,
 			"snapping": 20,
-			"selected": false,
+			"selected": true,
 			"saved": false,
 			"path": "",
 			"anim_time_update": "",
@@ -280,7 +280,12 @@
 			"model_origin_node": {
 				"icon": "folder",
 				"name": "group1",
-				"value": "d19e1b94-ae14-78f7-7f44-2dcda370416c"
+				"value": "d19e1b94-ae14-78f7-7f44-2dcda370416c",
+				"enabled_axes": {
+					"x": true,
+					"y": false,
+					"z": true
+				}
 			},
 			"animators": {
 				"d19e1b94-ae14-78f7-7f44-2dcda370416c": {
@@ -336,7 +341,7 @@
 			"override": false,
 			"length": 4.7,
 			"snapping": 20,
-			"selected": true,
+			"selected": false,
 			"saved": false,
 			"path": "",
 			"anim_time_update": "",
@@ -347,7 +352,12 @@
 			"model_origin_node": {
 				"icon": "folder",
 				"name": "group2",
-				"value": "f397df1b-e489-d376-3022-61c65d18703e"
+				"value": "f397df1b-e489-d376-3022-61c65d18703e",
+				"enabled_axes": {
+					"x": true,
+					"y": true,
+					"z": true
+				}
 			},
 			"animators": {
 				"d19e1b94-ae14-78f7-7f44-2dcda370416c": {
