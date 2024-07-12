@@ -1,3 +1,4 @@
+import { ModelOriginNode } from '../blockbenchTypeMods'
 import {
 	getKeyframeCommands,
 	getKeyframeExecuteCondition,
@@ -140,7 +141,7 @@ export function getNodeTransforms(
 		)
 	}
 
-	let originNodePos = new THREE.Vector3()
+	let originNodeOffset = new THREE.Vector3()
 	let originNodeDiff = new THREE.Vector3()
 
 	if (hasModelOriginNode(animation)) {
@@ -155,21 +156,21 @@ export function getNodeTransforms(
 			originNodeDiff = roundVector(originNodeDiff, 10)
 
 			previousModelOriginNodePos = currentPos
-			originNodePos = currentPos
+			originNodeOffset = currentPos
 
-			const enabledAxes = animation.model_origin_node.enabled_axes
-			console.log(enabledAxes)
-			if (!enabledAxes.x) {
+			if (!animation.model_origin_node.enabled_axes.x) {
 				originNodeDiff.setX(0)
-				originNodePos.setX(0)
+				originNodeOffset.setX(0)
 			}
-			if (!enabledAxes.y) {
-				originNodeDiff.setY(0)
-				originNodePos.setY(0)
-			}
-			if (!enabledAxes.z) {
+			// Remember the difference between THREEjs coords and in-game coords.
+			// Y <-> Z
+			if (!animation.model_origin_node.enabled_axes.y) {
 				originNodeDiff.setZ(0)
-				originNodePos.setZ(0)
+				originNodeOffset.setZ(0)
+			}
+			if (!animation.model_origin_node.enabled_axes.z) {
+				originNodeDiff.setY(0)
+				originNodeOffset.setY(0)
 			}
 		}
 	}
@@ -196,7 +197,7 @@ export function getNodeTransforms(
 			case 'item_display':
 			case 'block_display':
 			case 'bone': {
-				matrix = getNodeMatrix(node.node, node.scale, originNodePos)
+				matrix = getNodeMatrix(node.node, node.scale, originNodeOffset)
 				// Only add the frame if the matrix has changed.
 				// NOTE - Disabled because it causes issues with vanilla interpolation.
 				if (lastFrame?.matrix.equals(matrix)) continue
@@ -222,7 +223,7 @@ export function getNodeTransforms(
 				break
 			}
 			case 'locator': {
-				matrix = getNodeMatrix(node.node, 1, originNodePos)
+				matrix = getNodeMatrix(node.node, 1, originNodeOffset)
 				if (keyframe) {
 					commands = getKeyframeCommands(keyframe)
 					executeCondition = getKeyframeExecuteCondition(keyframe)
@@ -242,7 +243,7 @@ export function getNodeTransforms(
 				break
 			}
 			case 'camera': {
-				matrix = getNodeMatrix(node.node, 1, originNodePos)
+				matrix = getNodeMatrix(node.node, 1, originNodeOffset)
 				break
 			}
 		}
@@ -409,20 +410,9 @@ export function renderProjectAnimations(project: ModelProject, rig: IRenderedRig
 
 function hasModelOriginNode(
 	animation: _Animation
-): animation is _Animation & { model_origin_node: CollectionItem } {
+): animation is _Animation & { model_origin_node: ModelOriginNode } {
 	return animation.model_origin_node && Object.keys(animation.model_origin_node).length > 0
 }
-
-/*
-
-	- Per frame
-	- Getting diff pos from the root node if option is selected
-	- Adding (or subtracting) from all nodes (including itself)
-
-
-	TODO:
-	- Add checkbox to ignore Y axis
-*/
 
 /**
  * Rounds all components of the vector to the provided decimal places

@@ -11,26 +11,25 @@ export function openAnimationPropertiesDialog(animation: _Animation) {
 	const loopMode = new Valuable(animation.loop as string)
 	const loopDelay = new Valuable(Number(animation.loop_delay) || 0)
 	const excludedNodes = new Valuable(animation.excluded_nodes)
-	const keepModelOrigin = new Valuable(
-		animation.model_origin_node && Object.keys(animation.model_origin_node).length > 0
-	)
+	const keepModelOrigin = new Valuable((animation.model_origin_node?.name?.length ?? 0) > 0)
 	const modelOriginNode = new Valuable(animation.model_origin_node)
 
+	const { x = true, y = true, z = true } = animation.model_origin_node?.enabled_axes ?? {}
 	const modelOriginNodeAxes = new Valuable([
 		{
 			name: 'X',
 			tooltip: 'Enable the X axis',
-			selected: animation.model_origin_node?.enabled_axes?.x ?? true,
+			selected: x,
 		},
 		{
 			name: 'Y',
 			tooltip: 'Enable the Y axis',
-			selected: animation.model_origin_node?.enabled_axes?.y ?? true,
+			selected: y,
 		},
 		{
 			name: 'Z',
 			tooltip: 'Enable the Z axis',
-			selected: animation.model_origin_node?.enabled_axes?.z ?? true,
+			selected: z,
 		},
 	])
 

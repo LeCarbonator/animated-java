@@ -529,7 +529,7 @@ function updateModelTo1_1_carboFork(model: any): IBlueprintFormatJSON {
 			value = '',
 			// eslint-disable-next-line @typescript-eslint/naming-convention
 			enabled_axes = { x: true, y: true, z: true },
-		} = animation.model_origin_node
+		} = animation.model_origin_node ?? {}
 
 		animation.model_origin_node = {
 			icon,
