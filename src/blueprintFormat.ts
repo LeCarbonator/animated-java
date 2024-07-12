@@ -323,15 +323,19 @@ export const BLUEPRINT_CODEC = new Blockbench.Codec('animated_java_blueprint', {
 		if (model.animations) {
 			for (const animation of model.animations) {
 				const newAnimation = new Blockbench.Animation()
-				newAnimation.uuid = animation.uuid || guid()
-				newAnimation.extend(animation).add()
+				newAnimation.uuid = animation.uuid ?? guid()
+				newAnimation.extend(animation)
+				// for some reason, this property doesn't work if added with 'extend' and
+				// has to be force set.
+				newAnimation.model_origin_node = animation.model_origin_node
+				newAnimation.add()
 			}
 		}
 
 		if (model.animation_controllers) {
 			for (const controller of model.animation_controllers) {
 				const newController = new Blockbench.AnimationController()
-				newController.uuid = controller.uuid || guid()
+				newController.uuid = controller.uuid ?? guid()
 				newController.extend(controller).add()
 			}
 		}

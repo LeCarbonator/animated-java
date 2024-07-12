@@ -46,15 +46,17 @@ declare global {
 	// eslint-disable-next-line @typescript-eslint/naming-convention
 	interface _Animation {
 		excluded_nodes: CollectionItem[]
-		model_origin_node: CollectionItem | {}
+		model_origin_node: CollectionItem | Record<string, never>
 	}
 
 	interface AnimationUndoCopy {
 		excluded_nodes: string[]
+		model_origin_node: CollectionItem | Record<string, never>
 	}
 
 	interface AnimationOptions {
 		excluded_nodes: string[]
+		model_origin_node: CollectionItem | Record<string, never>
 	}
 
 	// eslint-disable-next-line @typescript-eslint/naming-convention

@@ -9,7 +9,7 @@ import { TextDisplay } from '../outliner/textDisplay'
 import { VanillaBlockDisplay } from '../outliner/vanillaBlockDisplay'
 import { VanillaItemDisplay } from '../outliner/vanillaItemDisplay'
 import { toSafeFuntionName } from '../util/minecraftUtil'
-import { eulerFromQuaternion, roundToNth } from '../util/misc'
+import { eulerFromQuaternion, roundTo, roundToNth } from '../util/misc'
 import { AnyRenderedNode, IRenderedRig } from './rigRenderer'
 import * as crypto from 'crypto'
 
@@ -23,9 +23,11 @@ export function restoreSceneAngle() {
 	scene.setRotationFromAxisAngle(new THREE.Vector3(0, 1, 0), 0)
 }
 
-function getNodeMatrix(node: OutlinerElement, scale: number) {
+function getNodeMatrix(node: OutlinerElement, scale: number, offset?: THREE.Vector3) {
 	const matrixWorld = node.mesh.matrixWorld.clone()
-	const pos = new THREE.Vector3().setFromMatrixPosition(matrixWorld).multiplyScalar(1 / 16)
+	const nodePos = new THREE.Vector3().setFromMatrixPosition(matrixWorld).multiplyScalar(1 / 16)
+
+	const pos = offset ? new THREE.Vector3().subVectors(nodePos, offset) : nodePos
 	matrixWorld.setPosition(pos)
 
 	const scaleVec = new THREE.Vector3().setScalar(scale)
@@ -83,6 +85,7 @@ export interface INodeTransform {
 export interface IRenderedFrame {
 	time: number
 	node_transforms: INodeTransform[]
+	model_teleport: THREE.Vector3
 	variant?: {
 		uuid: string
 		executeCondition?: string
@@ -108,6 +111,8 @@ interface ILastFrameCacheItem {
 	keyframe?: _Keyframe
 }
 let lastFrameCache = new Map<string, ILastFrameCacheItem>()
+let previousModelOriginNodePos = new THREE.Vector3()
+
 /**
  * Map of node UUIDs to a map of times to keyframes
  */
@@ -117,11 +122,12 @@ export function getNodeTransforms(
 	animation: _Animation,
 	nodeMap: IRenderedRig['nodeMap'],
 	time = 0
-) {
+): [nodes: INodeTransform[], originNodeDiff: THREE.Vector3] {
 	if (lastAnimation !== animation) {
 		lastAnimation = animation
 		lastFrameCache = new Map()
 		keyframeCache = new Map()
+		previousModelOriginNodePos = new THREE.Vector3()
 		for (const [uuid, node] of Object.entries(nodeMap)) {
 			const animator = animation.getBoneAnimator(node.node)
 			const keyframeMap = animator.keyframes
@@ -133,6 +139,27 @@ export function getNodeTransforms(
 			animation.excluded_nodes ? animation.excluded_nodes.map(b => b.value) : []
 		)
 	}
+
+	let originNodePos = new THREE.Vector3()
+	let originNodeDiff = new THREE.Vector3()
+
+	if (hasModelOriginNode(animation)) {
+		const currentOriginNode =
+			Group.all.find(g => g.uuid === animation.model_origin_node.value) ?? null
+
+		if (currentOriginNode) {
+			const currentMatrix = getNodeMatrix(currentOriginNode, 1)
+			const currentPos = new THREE.Vector3().setFromMatrixPosition(currentMatrix)
+
+			originNodeDiff = new THREE.Vector3().subVectors(currentPos, previousModelOriginNodePos)
+			originNodeDiff = roundVector(originNodeDiff, 10)
+
+			previousModelOriginNodePos = currentPos
+
+			originNodePos = currentPos
+		}
+	}
+
 	const nodes: INodeTransform[] = []
 
 	for (const [uuid, node] of Object.entries(nodeMap)) {
@@ -155,10 +182,10 @@ export function getNodeTransforms(
 			case 'item_display':
 			case 'block_display':
 			case 'bone': {
-				matrix = getNodeMatrix(node.node, node.scale)
+				matrix = getNodeMatrix(node.node, node.scale, originNodePos)
 				// Only add the frame if the matrix has changed.
 				// NOTE - Disabled because it causes issues with vanilla interpolation.
-				if (lastFrame && lastFrame.matrix.equals(matrix)) continue
+				if (lastFrame?.matrix.equals(matrix)) continue
 				// Inherit instant interpolation from parent
 				if (node.parentNode) {
 					const parentKeyframes = keyframeCache.get(node.parentNode.uuid)
@@ -181,7 +208,7 @@ export function getNodeTransforms(
 				break
 			}
 			case 'locator': {
-				matrix = getNodeMatrix(node.node, 1)
+				matrix = getNodeMatrix(node.node, 1, originNodePos)
 				if (keyframe) {
 					commands = getKeyframeCommands(keyframe)
 					executeCondition = getKeyframeExecuteCondition(keyframe)
@@ -201,7 +228,7 @@ export function getNodeTransforms(
 				break
 			}
 			case 'camera': {
-				matrix = getNodeMatrix(node.node, 1)
+				matrix = getNodeMatrix(node.node, 1, originNodePos)
 				break
 			}
 		}
@@ -229,7 +256,7 @@ export function getNodeTransforms(
 		})
 	}
 
-	return nodes
+	return [nodes, originNodeDiff]
 }
 
 function getVariantKeyframe(animation: _Animation, time: number) {
@@ -288,11 +315,15 @@ export function renderAnimation(animation: _Animation, rig: IRenderedRig) {
 
 	for (let time = 0; time <= animation.length; time = roundToNth(time + 0.05, 20)) {
 		updatePreview(animation, time)
+		const [node_transforms, model_teleport] = getNodeTransforms(animation, rig.nodeMap, time)
+
 		const frame: IRenderedFrame = {
 			time,
-			node_transforms: getNodeTransforms(animation, rig.nodeMap, time),
+			node_transforms,
+			model_teleport,
 			variant: getVariantKeyframe(animation, time),
 		}
+
 		frame.node_transforms.forEach(n => includedNodes.add(n.uuid))
 		rendered.frames.push(frame)
 	}
@@ -360,4 +391,32 @@ export function renderProjectAnimations(project: ModelProject, rig: IRenderedRig
 
 	console.timeEnd('Rendering animations took')
 	return animations
+}
+
+function hasModelOriginNode(
+	animation: _Animation
+): animation is _Animation & { model_origin_node: CollectionItem } {
+	return animation.model_origin_node && Object.keys(animation.model_origin_node).length > 0
+}
+
+/*
+
+	- Per frame
+	- Getting diff pos from the root node if option is selected
+	- Adding (or subtracting) from all nodes (including itself)
+
+
+	TODO:
+	- Add checkbox to ignore Y axis
+*/
+
+/**
+ * Rounds all components of the vector to the provided decimal places
+ */
+function roundVector(vector: THREE.Vector3, decimalPlaces: number): THREE.Vector3 {
+	const newVector = vector.clone()
+	newVector.setX(roundTo(vector.x, decimalPlaces))
+	newVector.setY(roundTo(vector.y, decimalPlaces))
+	newVector.setZ(roundTo(vector.z, decimalPlaces))
+	return newVector
 }

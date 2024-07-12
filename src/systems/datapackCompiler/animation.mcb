@@ -384,6 +384,17 @@ dir <%export_namespace%> {
 											cameras: {}
 										}
 									%%>
+									<%%
+										if (frame.model_teleport) {
+											if (frame.model_teleport.equals(new THREE.Vector3(0, 0, 0))) return
+											const vector = frame.model_teleport
+											const x = vector.x === 0 ? '' : roundTo(vector.x, 10).toString()
+											const y = vector.y === 0 ? '' : roundTo(vector.y, 10).toString()
+											const z = vector.z === 0 ? '' : roundTo(vector.z, 10).toString()
+
+											emit.mcb(`execute on vehicle unless entity @s[tag=<%TAGS.TRANSFORMS_ONLY()%>] at @s run tp @s ^${x} ^${y} ^${z}`)
+										}
+									%%>
 									REPEAT (frame.node_transforms.sort(nodeSorter)) as node {
 										IF (['bone', 'text_display', 'item_display', 'block_display'].includes(node.type)) {
 											<%%

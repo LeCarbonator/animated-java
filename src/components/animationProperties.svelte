@@ -13,7 +13,6 @@
 	import { getTopLevelNodes } from "../util/getTopLevelNodes"
 	import Checkbox from './dialogItems/checkbox.svelte'
 	import SelectCollection from './dialogItems/selectCollection.svelte'
-	import { derived } from 'svelte/store'
 
 	export let animationName: Valuable<string>
 	export let loopMode: Valuable<string>
@@ -26,8 +25,8 @@
 	const topLevelBones = getTopLevelNodes()
 
 	// automatically select the top level node if there's only one
-	keepModelOrigin.subscribe((selected) => {
-		if (selected) {
+	keepModelOrigin.subscribe((enabled) => {
+		if (enabled) {
 			if (!modelOriginNode.get() || topLevelBones.length === 1) {
 				modelOriginNode.set(topLevelBones.at(0))
 			}
