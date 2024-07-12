@@ -1220,7 +1220,7 @@
 			"override": false,
 			"length": 9.8,
 			"snapping": 20,
-			"selected": false,
+			"selected": true,
 			"saved": false,
 			"path": "",
 			"anim_time_update": "",
@@ -1228,7 +1228,16 @@
 			"start_delay": "",
 			"loop_delay": "0",
 			"excluded_nodes": [],
-			"model_origin_node": {},
+			"model_origin_node": {
+				"icon": "folder",
+				"name": "root",
+				"value": "000eddba-124d-d59d-3864-54478ed23530",
+				"enabled_axes": {
+					"x": true,
+					"y": true,
+					"z": true
+				}
+			},
 			"animators": {
 				"85a240ec-688d-aa16-4a19-23fa08380dad": {
 					"name": "rightarm",
@@ -1349,6 +1358,44 @@
 							"easingArgs": []
 						}
 					]
+				},
+				"000eddba-124d-d59d-3864-54478ed23530": {
+					"name": "root",
+					"type": "bone",
+					"keyframes": [
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "300",
+									"y": "300",
+									"z": "300"
+								}
+							],
+							"uuid": "e44bb79e-f072-e271-3951-9ea3d9992f18",
+							"time": 9.8,
+							"color": -1,
+							"interpolation": "linear",
+							"easing": "linear",
+							"easingArgs": []
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0 "
+								}
+							],
+							"uuid": "2dd1d200-904f-8e97-f3ef-fad33a69598b",
+							"time": 0,
+							"color": -1,
+							"interpolation": "linear",
+							"easing": "linear",
+							"easingArgs": []
+						}
+					]
 				}
 			}
 		},
@@ -1367,7 +1414,8 @@
 			"start_delay": "",
 			"loop_delay": "",
 			"excluded_nodes": [],
-			"model_origin_node": {}
+			"model_origin_node": {},
+			"animators": {}
 		},
 		{
 			"uuid": "9ef7d26e-f85d-f181-ad86-be84d2af334a",
@@ -1384,7 +1432,8 @@
 			"start_delay": "",
 			"loop_delay": "",
 			"excluded_nodes": [],
-			"model_origin_node": {}
+			"model_origin_node": {},
+			"animators": {}
 		},
 		{
 			"uuid": "51b43cae-6147-c67d-8f5c-30afafd49e84",
@@ -1401,7 +1450,8 @@
 			"start_delay": "",
 			"loop_delay": "0",
 			"excluded_nodes": [],
-			"model_origin_node": {}
+			"model_origin_node": {},
+			"animators": {}
 		},
 		{
 			"uuid": "c429cb2f-adc9-b64b-55d1-dd834c49da34",
@@ -1424,7 +1474,8 @@
 					"value": "02999a03-41c2-0837-e31b-a4dc619ebd4a"
 				}
 			],
-			"model_origin_node": {}
+			"model_origin_node": {},
+			"animators": {}
 		}
 	],
 	"animation_controllers": []

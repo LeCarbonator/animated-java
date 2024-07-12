@@ -155,8 +155,22 @@ export function getNodeTransforms(
 			originNodeDiff = roundVector(originNodeDiff, 10)
 
 			previousModelOriginNodePos = currentPos
-
 			originNodePos = currentPos
+
+			const enabledAxes = animation.model_origin_node.enabled_axes
+			console.log(enabledAxes)
+			if (!enabledAxes.x) {
+				originNodeDiff.setX(0)
+				originNodePos.setX(0)
+			}
+			if (!enabledAxes.y) {
+				originNodeDiff.setY(0)
+				originNodePos.setY(0)
+			}
+			if (!enabledAxes.z) {
+				originNodeDiff.setZ(0)
+				originNodePos.setZ(0)
+			}
 		}
 	}
 

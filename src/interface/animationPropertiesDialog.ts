@@ -20,17 +20,17 @@ export function openAnimationPropertiesDialog(animation: _Animation) {
 		{
 			name: 'X',
 			tooltip: 'Enable the X axis',
-			selected: animation.model_origin_node.enabled_axes.x,
+			selected: animation.model_origin_node?.enabled_axes?.x ?? true,
 		},
 		{
 			name: 'Y',
 			tooltip: 'Enable the Y axis',
-			selected: animation.model_origin_node.enabled_axes.y,
+			selected: animation.model_origin_node?.enabled_axes?.y ?? true,
 		},
 		{
 			name: 'Z',
 			tooltip: 'Enable the Z axis',
-			selected: animation.model_origin_node.enabled_axes.z,
+			selected: animation.model_origin_node?.enabled_axes?.z ?? true,
 		},
 	])
 
