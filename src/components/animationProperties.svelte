@@ -96,8 +96,8 @@
 			bind:selectedItem={modelOriginNode}
 		/>
 		<MultiSelect 
-		label={"Enabled Axes"} 
-		tooltip={"Enabled Axes"} 
+		label={translate('animated_java.dialog.animation_properties.enabled_axes.title')} 
+		tooltip={translate('animated_java.dialog.animation_properties.enabled_axes.description')} 
 		selection={modelOriginNodeAxes}
 		/>
 	{/if}

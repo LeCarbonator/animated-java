@@ -162,15 +162,13 @@ export function getNodeTransforms(
 				originNodeDiff.setX(0)
 				originNodeOffset.setX(0)
 			}
-			// Remember the difference between THREEjs coords and in-game coords.
-			// Y <-> Z
 			if (!animation.model_origin_node.enabled_axes.y) {
-				originNodeDiff.setZ(0)
-				originNodeOffset.setZ(0)
-			}
-			if (!animation.model_origin_node.enabled_axes.z) {
 				originNodeDiff.setY(0)
 				originNodeOffset.setY(0)
+			}
+			if (!animation.model_origin_node.enabled_axes.z) {
+				originNodeDiff.setZ(0)
+				originNodeOffset.setZ(0)
 			}
 		}
 	}

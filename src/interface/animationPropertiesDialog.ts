@@ -18,17 +18,17 @@ export function openAnimationPropertiesDialog(animation: _Animation) {
 	const modelOriginNodeAxes = new Valuable([
 		{
 			name: 'X',
-			tooltip: 'Enable the X axis',
+			tooltip: translate('animated_java.dialog.animation_properties.enabled_axes.x'),
 			selected: x,
 		},
 		{
 			name: 'Y',
-			tooltip: 'Enable the Y axis',
+			tooltip: translate('animated_java.dialog.animation_properties.enabled_axes.y'),
 			selected: y,
 		},
 		{
 			name: 'Z',
-			tooltip: 'Enable the Z axis',
+			tooltip: translate('animated_java.dialog.animation_properties.enabled_axes.z'),
 			selected: z,
 		},
 	])
